@@ -292,7 +292,7 @@ export default function DoctorsPage() {
                                 <AvatarFallback>
                                   {selectedDoctor.name
                                     .split(" ")
-                                    .map((n) => n[0])
+                                    .map((n: string) => n[0])
                                     .join("")}
                                 </AvatarFallback>
                               </Avatar>
