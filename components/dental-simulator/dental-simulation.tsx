@@ -8,7 +8,6 @@ import { Vector3 } from "three";
 import InfoPanel from "./info-panel";
 import MeasurementsOverlay from "./measurements-overlay";
 import TreatmentTimeline from "./treatment-timeline";
-import { useSimulationSettings } from "@/hooks/use-simulation-settings";
 
 // Create more realistic teeth models
 const TeethModel = ({
@@ -201,7 +200,7 @@ const TeethModel = ({
 };
 
 // Draggable Invisalign component with more realistic shape
-const DraggableInvisalign = ({ onDrop, isVisible, activeModel }) => {
+const DraggableInvisalign = ({ onDrop, isVisible }) => {
   const meshRef = useRef();
   const [position, setPosition] = useState([2.5, 0, 0]); // Start position (to the right of teeth)
   const [isDragging, setIsDragging] = useState(false);
@@ -362,7 +361,7 @@ const DraggableInvisalign = ({ onDrop, isVisible, activeModel }) => {
 };
 
 // Veneer treatment component with more realistic appearance
-const VeneerTreatment = ({ type, active, activeModel }) => {
+const VeneerTreatment = ({ type, active }) => {
   const springs = useSpring({
     opacity: active ? 0.9 : 0,
     scale: active ? 1 : 0.95,
@@ -657,7 +656,6 @@ export default function DentalSimulation({ activeModel, activeTreatment }) {
   const [infoText, setInfoText] = useState("");
   const [treatmentProgress, setTreatmentProgress] = useState(0);
   const [treatmentData, setTreatmentData] = useState(null);
-  const { simulationSettings } = useSimulationSettings();
 
   // Set detail level based on settings
   const getPixelRatio = () => {
@@ -680,15 +678,10 @@ export default function DentalSimulation({ activeModel, activeTreatment }) {
 
   return (
     <div className="w-full h-full bg-white dark:bg-gray-800 relative">
-      <Canvas
-        shadows={simulationSettings.shadows}
-        camera={{ position: [0, 0, 5], fov: 50 }}
-        dpr={pixelRatio}
-      >
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={pixelRatio}>
         <Scene
           activeModel={activeModel}
           activeTreatment={activeTreatment}
-          simulationSettings={simulationSettings}
           setInfoText={setInfoText}
           setTreatmentProgress={setTreatmentProgress}
           setTreatmentData={setTreatmentData}
@@ -700,27 +693,8 @@ export default function DentalSimulation({ activeModel, activeTreatment }) {
           text={infoText}
           progress={treatmentProgress}
           isActive={!!activeTreatment}
-          textSize={simulationSettings.textSize}
         />
       )}
-
-      {simulationSettings.showMeasurements && treatmentData && (
-        <MeasurementsOverlay
-          treatmentData={treatmentData}
-          activeModel={activeModel}
-          textSize={simulationSettings.textSize}
-        />
-      )}
-
-      {simulationSettings.showTimeline &&
-        treatmentData &&
-        treatmentData.type === "invisalign" && (
-          <TreatmentTimeline
-            treatmentData={treatmentData}
-            progress={treatmentProgress}
-            textSize={simulationSettings.textSize}
-          />
-        )}
 
       <div className="absolute top-4 right-4 text-xs bg-white dark:bg-gray-700 p-2 rounded-md shadow-md">
         <p className="font-medium">Instructions:</p>
