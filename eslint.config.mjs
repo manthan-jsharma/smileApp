@@ -19,6 +19,14 @@ const eslintConfig = [
       "react/no-unescaped-entities": "off",
       "react/jsx-no-comment-textnodes": "off",
     },
+    overrides: [
+      {
+        files: ["./app/doctor/patients/page.tsx"],
+        rules: {
+          "@typescript-eslint/no-explicit-any": "error",
+        },
+      },
+    ]
   },
 
 ];
